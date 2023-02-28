@@ -14,7 +14,7 @@ const userSchema = new Schema(
             required: "Email address is required",
             unique: true,
             match: [
-                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,10})+$/,
                 "Please use a valid email address",
             ],
         },
@@ -30,13 +30,6 @@ const userSchema = new Schema(
                 ref: "User",
             },
         ],
-        virtuals: {
-            friendCount: {
-                get() {
-                    return this.friends.length;
-                },
-            },
-        },
     },
     {
         toJSON: {
@@ -45,6 +38,10 @@ const userSchema = new Schema(
         id: false,
     }
 );
+
+userSchema.virtual("friendCount").get(function () {
+    return this.friends.length;
+});
 
 const User = model("user", userSchema);
 module.exports = User;
